@@ -1,0 +1,252 @@
+/* GitHub Dark Dimmed 主题风格 */
+:root {
+  --bg-color: #22272e;
+  --text-color: #adbac7;
+  --link-color: #539bf5;
+  --button-bg: #373e47;
+  --button-border: #444c56;
+  --button-hover: #444c56;
+  --input-bg: #2d333b;
+  --input-border: #444c56;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+    sans-serif;
+  line-height: 1.5;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  color: #cdd9e5;
+  border-bottom: 1px solid #444c56;
+  padding-bottom: 0.3em;
+  font-size: 2em;
+}
+
+#employee_info_list {
+  margin: 20px 0;
+  padding-left: 25px;
+}
+
+#employee_info_list a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+#employee_info_list a:hover {
+  text-decoration: underline;
+}
+
+button {
+  background-color: var(--button-bg);
+  border: 1px solid var(--button-border);
+  color: var(--text-color);
+  padding: 5px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin: 5px 3px;
+}
+
+button:hover {
+  background-color: var(--button-hover);
+}
+
+#page_to_go {
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-color);
+  padding: 5px 12px;
+  border-radius: 6px;
+  width: 120px;
+  margin-left: 10px;
+}
+
+#page_to_go:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(65, 132, 228, 0.3);
+}
+
+#page_catalogue {
+  color: #768390;
+  font-size: 0.9em;
+  margin: 15px 0;
+}
+
+/* 分页控制容器 */
+body > button:not([onclick="jumpToSpecificPage"]) {
+  margin-right: 8px;
+}
+
+/* 输入框组布局 */
+input + button {
+  vertical-align: baseline;
+  margin-left: 8px;
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+  body {
+    padding: 15px;
+  }
+
+  button {
+    padding: 6px 12px;
+    margin: 3px;
+  }
+
+  #page_to_go {
+    width: 100%;
+    margin: 10px 0;
+  }
+}
+
+/* 新增动画相关CSS */
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.employee-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 1.2rem;
+  margin: 0.8rem 0;
+  transition: all 0.25s ease;
+  animation: cardEntrance 0.6s ease-out forwards;
+  opacity: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.employee-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.24);
+  border-color: var(--link-color);
+}
+
+.employee-card:nth-child(even) {
+  animation-delay: 0.1s;
+}
+
+.employee-card a {
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  text-decoration: none !important;
+}
+
+.employee-id {
+  background: var(--button-bg);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--link-color);
+  transition: transform 0.3s ease;
+}
+
+.employee-info {
+  border-left: 2px solid var(--input-border);
+  padding-left: 1rem;
+}
+
+/* 新增颜色变量 */
+:root {
+  --card-bg: #2d333b;
+  --card-border: #444c56;
+}
+
+/* 优化原有样式 */
+#employee_info_list {
+  list-style: none;
+  padding-left: 0;
+}
+
+button {
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+button:active::after {
+  width: 150px;
+  height: 150px;
+}
+
+/* 加载动画 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #444c56;
+  border-top-color: #539bf5;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 响应式优化 */
+@media (max-width: 600px) {
+  .employee-card a {
+    grid-template-columns: 1fr;
+  }
+
+  .employee-id {
+    margin-bottom: 1rem;
+  }
+}
