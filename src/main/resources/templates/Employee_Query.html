@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>Employee Profile</title>
+</head>
+
+<style>
+		/* 更新后的 GitHub 暗黑主题变量 */
+	:root {
+		--gh-bg: #0d1117;
+		--gh-text: #c9d1d9;
+		--gh-border: #30363d;
+		--gh-accent: #58a6ff;
+		--gh-btn-bg: #238636;
+		--gh-btn-hover: #2ea043;
+		--gh-card-bg: #161b22;
+		--gh-table-header: #0d1117;
+	}
+
+	/*顺序是上、右、下、左*/
+	#data_input {
+		margin: 10px 5px 15px 0px;
+	}
+
+	#emp_no_button {
+		margin: 10px 0px 15px 15px;
+	}
+
+	#prompt {
+		padding: 0px 10px 0px 0px;
+	}
+
+	/* 新增淡入动画 */
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	#employee_info {
+		display: none; /* 初始隐藏 */
+		animation: fadeIn 0.4s ease-out forwards;
+	}
+
+	/* 优化后的基础样式 */
+	body {
+		background-color: var(--gh-bg);
+		color: var(--gh-text);
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+		line-height: 1.5;
+		margin: 2rem auto;
+		padding: 20px;
+		max-width: 1200px;
+	}
+
+	h1 {
+		font-size: 24px;
+		font-weight: 600;
+		border-bottom: 1px solid var(--gh-border);
+		padding-bottom: 0.3em;
+		margin-bottom: 1em;
+	}
+
+	/* 优化输入框和按钮 */
+	#emp_no_input {
+		background-color: #010409;
+		border: 1px solid var(--gh-border);
+		color: var(--gh-text);
+		padding: 6px 12px;
+		border-radius: 6px;
+		font-size: 14px;
+		width: 200px;
+		transition: border-color 0.2s;
+	}
+
+	#emp_no_input:focus {
+		outline: none;
+		border-color: var(--gh-accent);
+		box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+	}
+
+	#emp_no_button {
+		background-color: var(--gh-btn-bg);
+		color: #ffffff;
+		border: 1px solid rgba(240, 246, 252, 0.1);
+		padding: 6px 16px;
+		border-radius: 6px;
+		font-size: 14px;
+		font-weight: 500;
+		cursor: pointer;
+		transition: all 0.2s;
+	}
+
+	#emp_no_button:hover {
+		background-color: var(--gh-btn-hover);
+		border-color: #3fb950;
+		transform: translateY(-1px);
+	}
+
+	/* 优化卡片样式 */
+	#basic_info,
+	#major_info,
+	#salary_history {
+		background-color: var(--gh-card-bg);
+		border: 1px solid var(--gh-border);
+		border-radius: 6px;
+		padding: 24px;
+		margin-bottom: 20px;
+		box-shadow: 0 1px 0 rgba(16, 22, 26, 0.15);
+	}
+
+	h2 {
+		font-size: 20px;
+		font-weight: 600;
+		margin-top: 0;
+		margin-bottom: 1em;
+		color: var(--gh-text);
+	}
+
+	h3 {
+		font-size: 16px;
+		font-weight: 600;
+		color: #8b949e;
+		margin: 1.5em 0 1em;
+	}
+
+	/* 优化列表样式 */
+	ul, ol {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		border: 1px solid var(--gh-border);
+		border-radius: 6px;
+		background-color: var(--gh-bg);
+	}
+
+	ul li, ol li {
+		padding: 8px 16px;
+		border-bottom: 1px solid var(--gh-border);
+		transition: background-color 0.2s;
+	}
+
+	ul li:last-child,
+	ol li:last-child {
+		border-bottom: 0;
+	}
+
+	ul li:hover,
+	ol li:hover {
+		background-color: rgba(88, 166, 255, 0.05);
+	}
+
+	/* 优化表格样式 */
+	table {
+		width: 100%;
+		border: 1px solid var(--gh-border);
+		border-radius: 6px;
+		border-collapse: separate; /* 改为独立边框模式 */
+		border-spacing: 0;
+		background-color: var(--gh-bg);
+		overflow: hidden; /* 保证圆角效果 */
+	}
+
+	th, td {
+		padding: 10px 16px;
+		border: 1px solid var(--gh-border);
+		text-align: center; /* 添加居中 */
+		vertical-align: middle;
+	}
+
+	th {
+		background-color: var(--gh-table-header);
+		font-weight: 600;
+		border-bottom-width: 2px; /* 加粗表头下边框 */
+	}
+
+	/* 移除默认顶部边框 */
+	tr:first-child th,
+	tr:first-child td {
+		border-top: none;
+	}
+
+	/* 处理首尾列边框 */
+	tr td:first-child,
+	tr th:first-child {
+		border-left: none;
+	}
+
+	tr td:last-child,
+	tr th:last-child {
+		border-right: none;
+	}
+
+	/* 最后一行底部边框 */
+	tr:last-child td {
+		border-bottom: none;
+	}
+
+	tr:hover td {
+		background-color: rgba(88, 166, 255, 0.03);
+	}
+
+	/* 优化薪资历史样式 */
+	#salary_history_data td:last-child {
+		font-family: monospace;
+		color: var(--gh-accent);
+		font-weight: 500;
+	}
+
+	time {
+		color: #8b949e;
+		font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+		font-size: 1.0em;
+	}
+
+	/* 响应式优化 */
+	@media (max-width: 768px) {
+		body {
+			padding: 15px;
+		}
+		
+		#basic_info,
+		#major_info,
+		#salary_history {
+			padding: 16px;
+		}
+		
+		table {
+			display: table; /* 恢复表格布局 */
+			width: 100%;
+		}
+	
+		th, td {
+			padding: 8px 12px;
+			white-space: nowrap;
+		}
+	}
+</style>
+<body>
+	<h1>Employee Profile</h1>
+
+	<div id="data_input">
+		<span id="prompt">Enter Employee No: </span>
+		<input id="emp_no_input" type="text" placeholder="Employee No.">
+		<button id="emp_no_button" type="submit" onclick="queryEmployee()">
+			Query
+		</button>
+	</div>
+
+	<div id="employee_info">
+		<!-- 基本信息区块 -->
+		<div id="basic_info">
+			<section>
+				<h2>Basic Information</h2>
+				<p> ID:        <span id="employee_id"></span></p>
+				<p> Name:      <span id="employee_name"><span></p>
+				<p>	Gender:    <span id="employee_gender"></span></p>
+				<p>	Born Date: <time id="employee_born_date"></time></p>
+				<p>	Hire Date: <time id="employee_hire_date"></time></p>
+			</section>
+		</div>
+
+		<!-- 职业信息区块 -->
+		<div id="major_info">
+			<section>
+				<h2>Career</h2>
+
+				<article>
+					<h3>Titles</h3>
+					<ol id="titles_list"></ol>
+				</article>
+
+				<article>
+					<h3>Department Timeline</h3>
+					<table>
+						<thead>
+							<tr>
+								<th>Department</th>
+								<th>From Date</th>
+								<th>To Date</th>
+							</tr>
+						</thead>
+						<tbody id="department_timeline">
+							
+						</tbody>
+					</table>
+				</article>
+			</section>
+		</div>
+
+		<!-- 薪资历史区块 -->
+		<div id="salary_history">
+			<section>
+				<h2>Salary History</h2>
+				<table>
+					<thead>
+						<tr>
+							<th>Duration</th>
+							<th>Salary</th>
+						</tr>
+					</thead>
+					<tbody id="salary_history_data">
+
+					</tbody>
+				</table>
+			</section>
+		</div>
+	</div>
+</body>
+
+<script>
+
+	/*
+		通过 queryEmployee() 拿到 JSON，再布置到页面中去，有代表性的 JSON 示例如下：
+
+		{
+			"employeeId"	: 10010,
+			"bornDate"		: "1963-06-01",
+			"firstName"		: "Duangkaew",
+			"lastName"		: "Piveteau",
+			"gender"		: "F",
+			"hireDate"		: "1989-08-24",
+			"titles"		: ["Engineer"],
+			"departments"	: ["Production", "Quality Management"],
+			"salaries": {
+				"1996-11-24 -> 1997-11-24": 72488,
+				"1997-11-24 -> 1998-11-24": 74347,
+				"1998-11-24 -> 1999-11-24": 75405,
+				"1999-11-24 -> 2000-11-23": 78194,
+				"2000-11-23 -> 2001-11-23": 79580,
+				"2001-11-23 -> 9999-01-01": 80324
+			},
+			"fromDate" : ["1996-11-24", "2000-06-26"],
+			"toDate"   : ["2000-06-26","9999-01-01"]
+		}
+	*/
+	function setInfoToPage(queryJson) 
+	{
+		const clearElement = (id) => { 
+			document.getElementById(id).innerHTML = ''; 
+		};
+
+		// 清除所有列表和表格内容
+		clearElement('titles_list');
+		// clearElement('department_list');
+		clearElement('department_timeline');
+		clearElement('salary_history_data');
+
+
+		document.getElementById('employee_id').innerText   
+							= `${queryJson.employeeId}`;
+
+		document.getElementById('employee_name').innerHTML
+							= `<strong>
+									${queryJson.lastName}-${queryJson.firstName}
+								<strong>`;
+
+
+		document.getElementById('employee_gender').innerText
+							= (queryJson.gender === 'M') ? '♂️ Male' : '♀️ Female';
+
+		document.getElementById('employee_born_date').innerText
+							= `${queryJson.bornDate}`;
+
+		document.getElementById('employee_hire_date').innerText
+							= `${queryJson.hireDate}`;
+
+		const titlesList  		= queryJson.titles;
+		const departmentsList 	= queryJson.departments;
+		const salariesMap		= queryJson.salaries;
+		const fromDateList		= queryJson.fromDate;
+		const toDateList		= queryJson.toDate;
+
+		const titlesListElement
+		  	= document.getElementById('titles_list');
+
+		// const departmentListElement = document.getElementById('department_list');
+
+		const departmentTimelineElement
+			= document.getElementById('department_timeline');
+
+		const salaryHistoryElement
+			= document.getElementById('salary_history_data');
+
+		for (const title of titlesList) 
+		{
+			titlesListElement.insertAdjacentHTML(
+				'beforeend', `<li>${title}</li>`
+			);
+		}
+
+		/**
+			for (const departmentName of departmentsList) 
+			{
+				departmentListElement.insertAdjacentHTML(
+					'beforeend', `<li>${departmentName}</li>`
+				);
+			}
+		*/
+
+		for (var index = 0; index < fromDateList.length; ++index) 
+		{
+			let toDate = toDateList[index];
+
+			departmentTimelineElement.insertAdjacentHTML(
+				'beforeend', 
+				`
+				<tr>
+					<td>${departmentsList[index]}</td>
+					<td><time>${fromDateList[index]}</time></td>
+					<td><time>
+						${(toDate === '9999-01-01' ? 'Present' : toDate)}
+					</time></td>
+				</tr>`
+			);
+		}
+
+		for (const [date, salary] of Object.entries(salariesMap)) 
+		{
+			salaryHistoryElement.insertAdjacentHTML(
+				'beforeend', 
+				`
+				<tr>
+					<td><time>${date}<time></td> 
+					<td><strong>$${salary}</strong></td>
+				</tr>`
+			);
+		}			
+	}
+
+	async function queryEmployee() 
+	{
+		let employeeNo = document.getElementById('emp_no_input').value;
+
+		if (!employeeNo) {
+			alert('Enter employee no please~');
+			return;
+		}
+
+		try 
+		{
+			const response = await fetch(`/api/employee/info/${employeeNo}`);
+
+			if (!response.ok) 
+			{
+				const errorMessage
+					= `Query failed! Status:${response.status}, Error: ${await response.text()}.`;
+				
+				console.error(errorMessage);
+				alert(errorMessage);
+				
+				throw new Error(errorMessage);
+			}
+		
+			const queryJson = await response.json();
+
+			console.log(queryJson);
+
+			setInfoToPage(queryJson);
+
+			// 显示并触发动画
+			const infoContainer			 	= document.getElementById('employee_info');
+			infoContainer.style.display 	= 'block';
+			infoContainer.style.animation 	= 'none';
+			void infoContainer.offsetWidth; // 触发重绘
+			infoContainer.style.animation 	= 'fadeIn 0.4s ease-out forwards';
+		}
+		catch (error) {
+			console.error(error);
+		}
+	}
+</script>
+
+</html>
