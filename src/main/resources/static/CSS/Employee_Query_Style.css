@@ -1,0 +1,241 @@
+/* 更新后的 GitHub 暗黑主题变量 */
+:root {
+  --gh-bg: #0d1117;
+  --gh-text: #c9d1d9;
+  --gh-border: #30363d;
+  --gh-accent: #58a6ff;
+  --gh-btn-bg: #238636;
+  --gh-btn-hover: #2ea043;
+  --gh-card-bg: #161b22;
+  --gh-table-header: #0d1117;
+}
+
+/*顺序是上、右、下、左*/
+#data_input {
+  margin: 10px 5px 15px 0px;
+}
+
+#emp_no_button {
+  margin: 10px 0px 15px 15px;
+}
+
+#prompt {
+  padding: 0px 10px 0px 0px;
+}
+
+/* 新增淡入动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#employee_info {
+  display: none; /* 初始隐藏 */
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* 优化后的基础样式 */
+body {
+  background-color: var(--gh-bg);
+  color: var(--gh-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+    sans-serif;
+  line-height: 1.5;
+  margin: 2rem auto;
+  padding: 20px;
+  max-width: 1200px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--gh-border);
+  padding-bottom: 0.3em;
+  margin-bottom: 1em;
+}
+
+/* 优化输入框和按钮 */
+#emp_no_input {
+  background-color: #010409;
+  border: 1px solid var(--gh-border);
+  color: var(--gh-text);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 200px;
+  transition: border-color 0.2s;
+}
+
+#emp_no_input:focus {
+  outline: none;
+  border-color: var(--gh-accent);
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
+}
+
+#emp_no_button {
+  background-color: var(--gh-btn-bg);
+  color: #ffffff;
+  border: 1px solid rgba(240, 246, 252, 0.1);
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#emp_no_button:hover {
+  background-color: var(--gh-btn-hover);
+  border-color: #3fb950;
+  transform: translateY(-1px);
+}
+
+/* 优化卡片样式 */
+#basic_info,
+#major_info,
+#salary_history {
+  background-color: var(--gh-card-bg);
+  border: 1px solid var(--gh-border);
+  border-radius: 6px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 0 rgba(16, 22, 26, 0.15);
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 1em;
+  color: var(--gh-text);
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #8b949e;
+  margin: 1.5em 0 1em;
+}
+
+/* 优化列表样式 */
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: 1px solid var(--gh-border);
+  border-radius: 6px;
+  background-color: var(--gh-bg);
+}
+
+ul li,
+ol li {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--gh-border);
+  transition: background-color 0.2s;
+}
+
+ul li:last-child,
+ol li:last-child {
+  border-bottom: 0;
+}
+
+ul li:hover,
+ol li:hover {
+  background-color: rgba(88, 166, 255, 0.05);
+}
+
+/* 优化表格样式 */
+table {
+  width: 100%;
+  border: 1px solid var(--gh-border);
+  border-radius: 6px;
+  border-collapse: separate; /* 改为独立边框模式 */
+  border-spacing: 0;
+  background-color: var(--gh-bg);
+  overflow: hidden; /* 保证圆角效果 */
+}
+
+th,
+td {
+  padding: 10px 16px;
+  border: 1px solid var(--gh-border);
+  text-align: center; /* 添加居中 */
+  vertical-align: middle;
+}
+
+th {
+  background-color: var(--gh-table-header);
+  font-weight: 600;
+  border-bottom-width: 2px; /* 加粗表头下边框 */
+}
+
+/* 移除默认顶部边框 */
+tr:first-child th,
+tr:first-child td {
+  border-top: none;
+}
+
+/* 处理首尾列边框 */
+tr td:first-child,
+tr th:first-child {
+  border-left: none;
+}
+
+tr td:last-child,
+tr th:last-child {
+  border-right: none;
+}
+
+/* 最后一行底部边框 */
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background-color: rgba(88, 166, 255, 0.03);
+}
+
+/* 优化薪资历史样式 */
+#salary_history_data td:last-child {
+  font-family: monospace;
+  color: var(--gh-accent);
+  font-weight: 500;
+}
+
+time {
+  color: #8b949e;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
+    Liberation Mono, monospace;
+  font-size: 1em;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+  }
+
+  #basic_info,
+  #major_info,
+  #salary_history {
+    padding: 16px;
+  }
+
+  table {
+    display: table; /* 恢复表格布局 */
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
+}
