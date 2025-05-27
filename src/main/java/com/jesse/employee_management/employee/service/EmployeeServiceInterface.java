@@ -7,6 +7,13 @@ import java.util.List;
 
 public interface EmployeeServiceInterface
 {
+    /**
+     * 缓存当前的页面偏移量，
+     * 每一次刷新页面都能跳转到上一次浏览的页。
+     */
+    void saveCurrentOffset(int newOffset);
+    int  getCurrentOffset();
+
     EmployeeInfoDTO
     getEmployeeWholeInfoById(Integer employeeId);
 
