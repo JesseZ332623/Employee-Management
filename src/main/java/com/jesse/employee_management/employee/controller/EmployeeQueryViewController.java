@@ -56,6 +56,11 @@ public class EmployeeQueryViewController
                 this.employeeService.getEmployeeAmount()
         );
 
+        model.addAttribute(
+                "CurrentOffset",
+                this.employeeService.getCurrentOffset()
+        );
+
         return "Employee_Pagination_Query";
     }
 }
