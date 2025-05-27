@@ -1,3 +1,119 @@
+function showSalariesHistory(name, salariesMap) 
+{
+    const durationSet = new Set(); // 工资时间段集合
+	const salarySet   = new Set(); // 工资数值集合
+
+    for (const [date, salary] of Object.entries(salariesMap))
+    {
+        durationSet.add(date);
+        salarySet.add(salary);
+    }
+
+    var salaryChart = echarts.init(
+				document.getElementById('salary_charts')
+	);
+
+    // 指定图表的配置项和数据
+    option = {
+        backgroundColor: '#0d1117',
+        title: {
+            text: `Salary history of [${name}]`,
+            textStyle: {
+                color: '#ffffff',
+                fontSize: 20
+            },
+            top: '2%',            // 增加顶部间距
+            left: 'center'
+        },
+        tooltip: {
+            backgroundColor: '#161b22',
+            borderColor: '#30363d',
+            textStyle: {
+                color: '#c9d1d9'
+            }
+        },
+        legend: {
+            textStyle: {
+                color: '#8b949e'
+            },
+            top: '12%',           // 下移图例位置
+            itemGap: 25         // 增加图例项间距
+        },
+        grid: {                 // 新增grid配置控制绘图区域
+            top: '20%',
+            bottom: '15%',
+            containLabel: true
+        },
+        xAxis: {
+            show: false,
+            type: 'category',
+            axisLine: {
+                lineStyle: {
+                    color: '#30363d',
+                }
+            },
+            axisLabel: {
+                color: '#8b949e',
+                fontSize: 12,     // 缩小字号
+                top: '12%'
+            },
+            data: Array.from(durationSet)
+        },
+        yAxis: {
+            type: 'value',
+            axisLine: {
+                lineStyle: {
+                    color: '#30363d'
+                }
+            },
+            axisLabel: {
+                color: '#8b949e',
+                formatter: '${value}'
+            },
+            splitLine: {
+                lineStyle: {
+                    color: '#21262d'
+                }
+            }
+        },
+        series: [{
+            name: 'Salary',
+            type: 'line',
+            smooth: true,
+            symbol: 'circle',
+            symbolSize: 8,
+            lineStyle: {
+                color: '#58a6ff',
+                width: 2
+            },
+            itemStyle: {
+                color: '#edede9',
+                borderColor: '#0d1117',
+                borderWidth: 2
+            },
+            areaStyle: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    offset: 0,
+                    color: '#1f6feb66'
+                }, {
+                    offset: 1,
+                    color: '#1f6feb00'
+                }])
+            },
+            data: Array.from(salarySet)
+        }]
+    };
+
+    salaryChart.setOption(option);
+    salaryChart.resize();
+
+	window.addEventListener(
+		'resize', 
+		function() { salaryChart.resize(); }
+	);
+}
+
+
 /*
     通过 queryEmployee() 拿到 JSON，再布置到页面中去，有代表性的 JSON 示例如下：
 
@@ -98,13 +214,16 @@ function setInfoToPage(queryJson)
 					</tr>`
         );
     }
+
+    showSalariesHistory(`${queryJson.lastName}-${queryJson.firstName}`, salariesMap);
 }
 
 async function queryEmployee() 
 {
     let employeeNo = document.getElementById('emp_no_input').value;
 
-    if (!employeeNo) {
+    if (!employeeNo) 
+    {
         alert('Enter employee no please~');
         return;
     }
@@ -113,8 +232,7 @@ async function queryEmployee()
     {
         const response = await fetch(`/api/employee/info/${employeeNo}`);
 
-        if (!response.ok) 
-        {
+        if (!response.ok) {
             const errorMessage
                 = `Query failed! Status:${response.status}, Error: ${await response.text()}.`;
 
@@ -128,14 +246,14 @@ async function queryEmployee()
 
         console.log(queryJson);
 
-        setInfoToPage(queryJson);
-
         // 显示并触发动画
         const infoContainer = document.getElementById('employee_info');
         infoContainer.style.display = 'block';
         infoContainer.style.animation = 'none';
         void infoContainer.offsetWidth; // 触发重绘
         infoContainer.style.animation = 'fadeIn 0.4s ease-out forwards';
+
+        setInfoToPage(queryJson);
     }
     catch (error) {
         console.error(error);
