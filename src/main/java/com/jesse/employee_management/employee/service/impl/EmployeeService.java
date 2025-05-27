@@ -19,9 +19,39 @@ public class EmployeeService implements EmployeeServiceInterface
 {
     private final EmployeeRepository employeeRepository;
 
+    private static int CURRENT_OFFSET = 0;
+
     @Autowired
     public EmployeeService(EmployeeRepository emp) {
         this.employeeRepository = emp;
+    }
+
+    /**
+     * 缓存当前的页面偏移量，
+     * 每一次刷新页面都能跳转到上一次浏览的页。
+     */
+    @Override
+    public void saveCurrentOffset(int newOffset)
+    {
+        long totalEmployee = this.getEmployeeAmount();
+
+        if (newOffset < 0 || newOffset >= totalEmployee)
+        {
+           log.error(
+                   "newOffset must between 1 - {}.", totalEmployee
+           );
+
+           throw new RuntimeException(
+                   "newOffset must between 0 - " + totalEmployee + "."
+           );
+        }
+
+        CURRENT_OFFSET = newOffset;
+    }
+
+    @Override
+    public int getCurrentOffset() {
+        return CURRENT_OFFSET;
     }
 
     /**
