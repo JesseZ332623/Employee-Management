@@ -6,6 +6,7 @@
 		<title>Employee Profile</title>
 		
 		<link rel="stylesheet" th:href="@{/css/Employee_Query_Style.css}" />
+		<script th:src="@{/js/echarts.js}"></script>
 		<script th:src="@{/js/Employee_Query_Script.js}"></script>
 	</head>
 	<body>
@@ -64,7 +65,7 @@
 			<div id="salary_history">
 				<section>
 					<h2>Salary History</h2>
-					<table>
+					<table style="display: none;">
 						<thead>
 							<tr>
 								<th>Duration</th>
@@ -75,6 +76,9 @@
 
 						</tbody>
 					</table>
+					<div id="salary_charts" style="width:100%; height:500px;">
+
+					</div>
 				</section>
 			</div>
 		</div>
