@@ -50,7 +50,13 @@
 								<tr th:each="department, iter : ${EmployeeInfo.departments}">
 									<td><span th:text="${department}"></span></td>
 									<td><time th:text="${EmployeeInfo.fromDate[iter.index]}"></time></td>
-									<td><time th:text="${EmployeeInfo.toDate[iter.index]}"></time></td>
+									<td>
+										<time th:if="${EmployeeInfo.toDate[iter.index].toString().equals('9999-01-01')}" 
+										      style="color: green;">Present</time>
+
+										<time th:unless="${EmployeeInfo.toDate[iter.index].toString().equals('9999-01-01')}"
+											  th:text="${EmployeeInfo.toDate[iter.index]}"></time>
+									</td>
 								</tr>
 							</tbody>
 						</table>
