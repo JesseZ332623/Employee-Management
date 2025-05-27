@@ -2,6 +2,7 @@
 :root {
   --gh-bg: #0d1117;
   --gh-text: #c9d1d9;
+  --gh-salary-text: #2ea043;
   --gh-border: #30363d;
   --gh-accent: #58a6ff;
   --gh-btn-bg: #238636;
@@ -105,6 +106,15 @@ h1 {
   padding: 24px;
   margin-bottom: 20px;
   box-shadow: 0 1px 0 rgba(16, 22, 26, 0.15);
+}
+
+#salary_history strong {
+  color: var(--gh-salary-text);
+  font-size: medium;
+}
+
+#salary_charts {
+  margin: 25px 0 25px 0;
 }
 
 h2 {
