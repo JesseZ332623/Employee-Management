@@ -1,5 +1,5 @@
 // 每页数据量
-let ONE_PAGINATION_COUNT  = 20;
+let ONE_PAGINATION_COUNT  = 35;
 
 // 员工总数
 let TOTAL_EMPLOYEE_AMOUNT = Number.parseInt(
