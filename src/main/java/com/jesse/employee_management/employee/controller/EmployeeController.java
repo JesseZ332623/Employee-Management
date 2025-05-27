@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,6 +29,25 @@ public class EmployeeController
         return ResponseEntity.ok(this.employeeService.getEmployeeAmount());
     }
 
+    @PutMapping(path = "/save_current_offset")
+    public ResponseEntity<?>
+    saveCurrentOffset(@RequestBody String newOffset)
+    {
+        try
+        {
+            this.employeeService.saveCurrentOffset(Integer.parseInt(newOffset));
+
+            return ResponseEntity.ok("Set CURRENT_OFFSET = " + newOffset + ".");
+        }
+        catch (RuntimeException exception)
+        {
+            // log.error(exception.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                 .body(exception.getMessage());
+        }
+    }
+
     @GetMapping(path = "/info/{employeeId}")
     public ResponseEntity<?>
     getEmployeeWholeInfo(@PathVariable Integer employeeId)
@@ -39,8 +55,7 @@ public class EmployeeController
         try
         {
             EmployeeInfoDTO employeeInfoDTO
-                        = this.employeeService
-                              .getEmployeeWholeInfoById(employeeId);
+                        = this.employeeService.getEmployeeWholeInfoById(employeeId);
 
             return ResponseEntity.ok(employeeInfoDTO);
         }
@@ -60,6 +75,8 @@ public class EmployeeController
             @PathVariable Integer offset
     )
     {
+        //long totalEmployee = this.employeeService.getEmployeeAmount();
+
         try
         {
             List<EmployeeIDNameDTO> employeeInfos
