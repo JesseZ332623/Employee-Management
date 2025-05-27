@@ -1,17 +1,26 @@
-// 常量定义
-const ONE_PAGINATION_COUNT  = 20; // 每页数据量
-const TOTAL_EMPLOYEE_AMOUNT = Number.parseInt(
+// 每页数据量
+let ONE_PAGINATION_COUNT  = 20;
+
+// 员工总数
+let TOTAL_EMPLOYEE_AMOUNT = Number.parseInt(
     document.getElementById('employee_amount').textContent
 );
-const TOTAL_PAGES = Math.ceil(TOTAL_EMPLOYEE_AMOUNT / ONE_PAGINATION_COUNT);
 
-// 状态变量
-let CURRENT_OFFSET = 0; // 当前偏移量
+// 总页数
+let TOTAL_PAGES = Math.ceil(TOTAL_EMPLOYEE_AMOUNT / ONE_PAGINATION_COUNT);
+
+// 当前偏移量
+let CURRENT_OFFSET 
+    = Number.parseInt(
+        document.getElementById('current_offset').textContent.trim()
+    );
 
 // 初始化加载第一页
 doEmployeePaginationQuery();
 
-//======================= 核心分页逻辑 =======================//
+/**
+ * 核心的分页查询逻辑。 
+*/
 async function doEmployeePaginationQuery() 
 {
     clearElement('employee_info_list'); // 清空列表
@@ -54,13 +63,46 @@ async function doEmployeePaginationQuery()
 
         // 4. 更新页码显示
         updatePageIndicator();
+        
+        // 5. 保存当前的页面偏移量至服务器
+        saveCurrentOffset();
 
     } catch (error) {
         handleFetchError(error);
     }
 }
 
-//======================= 分页操作函数 =======================//
+async function saveCurrentOffset() 
+{
+    try 
+    {
+        const response = await fetch(
+            '/api/employee/save_current_offset',
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type' : 'text/plain'
+                },
+                body: CURRENT_OFFSET.toString()
+            }
+        );
+
+        if (!response.ok) 
+        {
+            const error = await response.text();
+            throw new Error(`HTTP ${response.status}: ${error}`);
+        }
+
+        console.info(await response.text());
+    }
+    catch (error) {
+        handleFetchError(error);
+    }
+}
+
+/**
+ * 去前一页。 
+*/
 function goToPreviousPage() 
 {
     const newOffset = CURRENT_OFFSET - ONE_PAGINATION_COUNT;
@@ -70,6 +112,9 @@ function goToPreviousPage()
     }
 }
 
+/**
+ * 去后一页。 
+*/
 function goToNextPage() 
 {
     const newOffset = CURRENT_OFFSET + ONE_PAGINATION_COUNT;
@@ -79,6 +124,9 @@ function goToNextPage()
     }
 }
 
+/**
+ * 去第一页。 
+*/
 function goToFirstPage() 
 {
     if (updateOffset(0)) {
@@ -86,6 +134,9 @@ function goToFirstPage()
     }
 }
 
+/**
+ * 去最后一页。 
+*/
 function goToLastPage() 
 {
     if (updateOffset(TOTAL_EMPLOYEE_AMOUNT - ONE_PAGINATION_COUNT)) {
@@ -93,22 +144,28 @@ function goToLastPage()
     }
 }
 
+/**
+ * 跳转去指定的页。 
+*/
 function jumpToSpecificPage() 
 {
-    const input = document.getElementById('page_to_go').value.trim();
+    const input 
+        = document.getElementById('page_to_go').value.trim();
 
-    // 输入验证
-    if (!/^\d+$/.test(input)) 
+    // 输入验证（对不是纯数字字符串的输入予以驳回）。
+    // 正则表达式 /^\d+$/ 表示严格匹配纯数字字符串。
+    if (!(/^\d+$/.test(input))) 
     {
-        alert("请输入有效整数页码！");
+        alert("Please enter valid integer page.");
         return;
     }
 
+    // String -> Number
     const page = Number.parseInt(input);
 
     if (page < 1 || page > TOTAL_PAGES) 
     {
-        alert(`页码范围需在 1-${TOTAL_PAGES} 之间`);
+        alert(`Page range need bettwen 1 to ${TOTAL_PAGES}.`);
         return;
     }
 
@@ -121,17 +178,21 @@ function jumpToSpecificPage()
     }
 }
 
-//======================= 工具函数 =======================//
+/**
+ * 更新页面偏移量，这部分的代码非常适合提取出来复用。
+ * 
+ * @param {Number} newOffset 新偏移量
+*/
 function updateOffset(newOffset) 
 {
     // 边界检查
     if (newOffset < 0) {
-        alert("已经是第一页！");
+        alert("Already the first page!");
         return false;
     }
 
     if (newOffset >= TOTAL_EMPLOYEE_AMOUNT) {
-        alert("已经是最后一页！");
+        alert("Already the last page!");
         return false;
     }
 
@@ -141,33 +202,51 @@ function updateOffset(newOffset)
     return true;
 }
 
+/**
+ * 计算当前所在的页码并更新。
+*/
 function updatePageIndicator() 
 {
-    const currentPage = Math.floor(CURRENT_OFFSET / ONE_PAGINATION_COUNT) + 1;
+    let currentPage = Math.floor(CURRENT_OFFSET / ONE_PAGINATION_COUNT) + 1;
+
     document.getElementById('page_catalogue').textContent
-        = `Curent Page: ${currentPage} / ${TOTAL_PAGES}`;
+            = `Curent Page: ${currentPage} / ${TOTAL_PAGES}`;
 }
 
+/**
+ * 验证员工的各项数据是否存在。
+*/
 function validateEmployeeData(emp) 
 {
-    return emp?.employeeId &&
-        emp?.firstName?.trim() &&
-        emp?.lastName?.trim();
+    return emp?.employeeId        &&
+           emp?.firstName?.trim() &&
+           emp?.lastName?.trim();
 }
 
+/**
+ * 错误处理逻辑。
+*/
 function handleFetchError(error) 
 {
     console.error("请求失败:", error);
     alert(`数据加载失败: ${error.message}`);
 }
 
+/**
+ * 清空指定 ID 对应的元素的所有内容。
+*/
 function clearElement(id) {
     document.getElementById(id).innerHTML = '';
 }
 
-//======================= 事件绑定 =======================//
-document.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', function (e) {
-        e.target.blur(); // 移除点击后的焦点样式
-    });
+/**
+ * 选择页面中所有的按钮，并依次给他们添加上监听器，
+ * 当某个按钮被点击时，立刻移除它的焦点（focus）。
+*/
+document.querySelectorAll('button')
+        .forEach((btn) => {
+                btn.addEventListener('click', function (event) {
+                    event.currentTarget.blur(); // 移除点击后的焦点样式
+            }
+        );
 });
