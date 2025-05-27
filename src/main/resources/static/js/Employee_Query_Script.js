@@ -182,29 +182,35 @@ function setInfoToPage(queryJson)
     const salaryHistoryElement
         = document.getElementById('salary_history_data');
 
-    for (const title of titlesList) {
+    for (const title of titlesList) 
+    {
         titlesListElement.insertAdjacentHTML(
             'beforeend', `<li>${title}</li>`
         );
     }
 
-    for (var index = 0; index < fromDateList.length; ++index) {
-        let toDate = toDateList[index];
+    for (var index = 0; index < fromDateList.length; ++index) 
+    {
 
         departmentTimelineElement.insertAdjacentHTML(
             'beforeend',
             `
 					<tr>
 						<td>${departmentsList[index]}</td>
-						<td><time>${fromDateList[index]}</time></td>
-						<td><time>
-							${(toDate === '9999-01-01' ? 'Present' : toDate)}
-						</time></td>
+						<td>
+                            <time>${fromDateList[index]}</time>
+                        </td>
+						<td>
+                            <time>
+                                ${(toDateList[index] === '9999-01-01') ? 'Present' : toDateList[index]}
+                            </time>
+                        </td>
 					</tr>`
         );
     }
 
-    for (const [date, salary] of Object.entries(salariesMap)) {
+    for (const [date, salary] of Object.entries(salariesMap)) 
+    {
         salaryHistoryElement.insertAdjacentHTML(
             'beforeend',
             `
