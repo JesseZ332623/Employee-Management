@@ -81,6 +81,32 @@ public class EmployeeService implements EmployeeServiceInterface
         }
     }
 
+    @Override
+    public List<Integer>
+    getEmployeeIdByName(String employeeName)
+    {
+        try
+        {
+            List<Integer> queryResult
+                    = this.employeeRepository.getEmployeeIdByName(employeeName);
+
+            if (queryResult.isEmpty())
+            {
+                throw new IllegalArgumentException(
+                        format("Employee name %s NOT FOUND!", employeeName)
+                );
+            }
+
+            return queryResult;
+        }
+        catch (IllegalArgumentException exception)
+        {
+            log.error(exception.getMessage());
+
+            throw new RuntimeException(exception.getMessage());
+        }
+    }
+
     /**
      * 分页查询所有员工信息。
      *
