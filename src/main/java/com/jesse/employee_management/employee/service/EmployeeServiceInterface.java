@@ -17,6 +17,9 @@ public interface EmployeeServiceInterface
     EmployeeInfoDTO
     getEmployeeWholeInfoById(Integer employeeId);
 
+    List<Integer>
+    getEmployeeIdByName(String employeeName);
+
     List<EmployeeIDNameDTO>
     getAllEmployeeIDNameByRange(Integer limit, Integer offset);
 
