@@ -117,6 +117,50 @@ h1 {
   margin: 25px 0 25px 0;
 }
 
+#print_emp_info {
+  /* 定位 */
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 1000; /* 确保在最上层 */
+
+  /* 颜色样式 */
+  background-color: var(--gh-btn-bg);
+  color: #ffffff;
+  border: 1px solid rgba(240, 246, 252, 0.1);
+  
+  /* 形状 */
+  padding: 8px 16px;
+  border-radius: 6px;
+  
+  /* 文字 */
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  
+  /* 交互 */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* 添加深度 */
+
+  /* 防止遮挡内容 */
+  margin: 0;
+}
+
+/* 悬停效果 */
+#print_emp_info:hover {
+  background-color: var(--gh-btn-hover);
+  border-color: #3fb950;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 点击效果 */
+#print_emp_info:active {
+  transform: translateY(0);
+  transition-duration: 0.05s;
+}
+
 h2 {
   font-size: 20px;
   font-weight: 600;
@@ -225,7 +269,6 @@ time {
   font-size: 1em;
 }
 
-/* 响应式优化 */
 @media (max-width: 768px) {
   body {
     padding: 15px;
@@ -246,5 +289,14 @@ time {
   td {
     padding: 8px 12px;
     white-space: nowrap;
+  }
+}
+
+@media print {
+  #salary_charts {
+    width: 100% !important;
+    margin: 0 auto !important;
+    /* left: 0 !important; */
+    position: relative !important;
   }
 }
