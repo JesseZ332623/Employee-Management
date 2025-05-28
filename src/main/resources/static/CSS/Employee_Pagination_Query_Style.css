@@ -31,10 +31,12 @@ h1 {
 #employee_info_list {
   margin: 20px 0;
   padding-left: 25px;
+  list-style: none;
+  padding-left: 0;
 }
 
 #employee_info_list a {
-  color: var(--link-color);
+  color: #539bf5;
   text-decoration: none;
 }
 
@@ -179,12 +181,6 @@ input + button {
 :root {
   --card-bg: #2d333b;
   --card-border: #444c56;
-}
-
-/* 优化原有样式 */
-#employee_info_list {
-  list-style: none;
-  padding-left: 0;
 }
 
 button {
