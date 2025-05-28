@@ -96,6 +96,22 @@ h1 {
   transform: translateY(-1px);
 }
 
+#employee_info_links {
+  margin: 20px 0;
+  padding-left: 25px;
+  list-style: none;
+  padding-left: 0;
+}
+
+#employee_info_links a {
+  color:#539bf5;;
+  text-decoration: none;
+}
+
+#employee_info_links a:hover {
+  text-decoration: underline;
+}
+
 /* 优化卡片样式 */
 #basic_info,
 #major_info,
