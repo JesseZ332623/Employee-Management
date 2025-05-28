@@ -60,6 +60,25 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer>
     );
 
     /**
+     * 通过员工完整姓名查询员工的完整信息。
+     * 需要注意的是，员工的姓名并不唯一，查询可能会返回多个结果，
+     * 因此需要一个 List{@literal <Integer>} 作为返回类型。
+     *
+     * @param employeeName 员工完整姓名（示例：Georgi-Facello）
+     */
+    @Query(
+            value = """
+                    SELECT emp_no FROM employees
+                    WHERE CONCAT(first_name, '-', last_name) = :employeeName
+                    """,
+            nativeQuery = true
+    )
+    List<Integer> getEmployeeIdByName(
+            @Param(value = "employeeName")
+            String employeeName
+    );
+
+    /**
      * <p>分页查找所有员工的 id 和 姓名。</p>
      */
     @Query(
