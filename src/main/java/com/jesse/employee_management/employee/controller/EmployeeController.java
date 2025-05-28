@@ -48,7 +48,7 @@ public class EmployeeController
         }
     }
 
-    @GetMapping(path = "/info/{employeeId}")
+    @GetMapping(path = "/info/search_by_id/{employeeId}")
     public ResponseEntity<?>
     getEmployeeWholeInfo(@PathVariable Integer employeeId)
     {
@@ -61,7 +61,30 @@ public class EmployeeController
         }
         catch (RuntimeException exception)
         {
-            log.error(exception.getMessage());
+            // log.error(exception.getMessage());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                 .body(exception.getMessage());
+        }
+    }
+
+    @GetMapping(path = "/info/search_by_name/{employeeName}")
+    public ResponseEntity<?>
+    getEmployeeWholeInfosByName(
+            @PathVariable
+            String employeeName
+    )
+    {
+        try
+        {
+            List<Integer> employeeIDs
+                = this.employeeService.getEmployeeIdByName(employeeName);
+
+            return ResponseEntity.ok(employeeIDs);
+        }
+        catch (RuntimeException exception)
+        {
+            // log.error(exception.getMessage());
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                  .body(exception.getMessage());
@@ -88,10 +111,10 @@ public class EmployeeController
         }
         catch (RuntimeException exception)
         {
-            log.error(exception.getMessage());
+            // log.error(exception.getMessage());
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(exception.getMessage());
+                                 .body(exception.getMessage());
         }
     }
 }
