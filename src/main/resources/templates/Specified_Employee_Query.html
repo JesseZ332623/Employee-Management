@@ -22,7 +22,7 @@
 					<h2>Basic Information</h2>
 					<p> ID:        <span th:text="${EmployeeInfo.employeeId}" id="employee_id"></span></p>
 					<p> Name:      <span th:text="${EmployeeInfo.firstName} + '-' + ${EmployeeInfo.lastName}" id="employee_name"><span></p>
-					<p>	Gender:    <span th:text="${EmployeeInfo.gender == 'M'} ? '♂️ Male' : '♀️ Female'" id="employee_gender"></span></p>
+					<p>	Gender:    <span th:text="${(EmployeeInfo.gender == 'M'.charAt(0)) ? '♂️ Male' : '♀️ Female'}" id="employee_gender"></span></p>
 					<p>	Born Date: <time th:text="${EmployeeInfo.bornDate}" id="employee_born_date"></time></p>
 					<p>	Hire Date: <time th:text="${EmployeeInfo.hireDate}" id="employee_hire_date"></time></p>
 				</section>
@@ -74,7 +74,11 @@
 					  th:text="${#maps.size(EmployeeInfo.salaries)}"></span>
 				<section>
 					<h2>Salary History</h2>
-					<table style="display: none;">
+					<button type="button" id="btn_display_hidden"
+					        onclick="displayOrHidden(this, 'salary_history_table')">
+						Hidden Table
+					</button>
+					<table id="salary_history_table">
 						<thead>
 							<tr>
 								<th>Duration</th>
@@ -106,4 +110,5 @@
 	<script th:src="@{/js/echarts.js}"></script>
 	<script th:src="@{/js/Specified_Employee_Query_Script.js}"></script>
 	<script th:src="@{/js/Print_Employee.js}"></script>
+	<script th:src="@{/js/TableView_Operator_Script.js}"></script>
 </html>
