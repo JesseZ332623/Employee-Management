@@ -12,23 +12,18 @@ function renderSalaryCharts()
             document.getElementById('salary_history_size').textContent
         );
 
-    const durationSet = new Set(); // 工资时间段集合
-    const salarySet   = new Set(); // 工资数值集合
+    const salaryHistoryMap = new Map();
 
     for (var index = 0; index < historySize; ++index) 
-        {
-        durationSet.add(
-            document.getElementById(`salary_time_${index}`).textContent
-        );
-
-        salarySet.add(
+    {
+        salaryHistoryMap.set(
+            document.getElementById(`salary_time_${index}`).textContent,
             Number.parseInt(
                 document.getElementById(`salary_val_${index}`)
                     .textContent.substring(1)
             )
         );
     }
-
 
     var salaryChart = echarts.init(
         document.getElementById('salary_charts')
@@ -78,7 +73,7 @@ function renderSalaryCharts()
                 fontSize: 12,     // 缩小字号
                 top: '12%'
             },
-            data: Array.from(durationSet)
+            data: Array.from(salaryHistoryMap.keys())
         },
         yAxis: {
             type: 'value',
@@ -121,7 +116,7 @@ function renderSalaryCharts()
                     color: '#1f6feb00'
                 }])
             },
-            data: Array.from(salarySet)
+            data: Array.from(salaryHistoryMap.values())
         }]
     };
 
