@@ -92,7 +92,7 @@ public class EmployeeInfoDTO
      */
     private Map<String, Integer> parseSalaries(String src)
     {
-        Map<String, Integer> salaries = new LinkedHashMap<>();
+        Map<String, Integer> salaries = new TreeMap<>();
 
         if (src != null && !src.isEmpty())
         {
