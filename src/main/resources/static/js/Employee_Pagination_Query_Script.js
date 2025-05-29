@@ -54,7 +54,6 @@ async function doEmployeePaginationQuery()
                 'beforeend',
                 `<li>
 					<a href="/employee/query/${employee.employeeId}">
-						Profile of employee: 
 						[${employee.employeeId}] ${employee.firstName}-${employee.lastName}
 					</a>
 				</li>`
