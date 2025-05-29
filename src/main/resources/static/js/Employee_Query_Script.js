@@ -1,12 +1,16 @@
-function showSalariesHistory(name, salariesMap) 
+/** 
+ * 显示指定员工的工资历史平滑的折线图。
+ * 
+ * @param {string}   name
+ * @param {string}   salariesJSON
+*/
+function showSalariesHistory(name, salariesJSON) 
 {
-    const durationSet = new Set(); // 工资时间段集合
-	const salarySet   = new Set(); // 工资数值集合
+    console.log(salariesJSON);
+    const salariesMap = new Map();
 
-    for (const [date, salary] of Object.entries(salariesMap))
-    {
-        durationSet.add(date);
-        salarySet.add(salary);
+    for (const entry of Object.entries(salariesJSON)) {
+        salariesMap.set(entry[0], entry[1]);
     }
 
     var salaryChart = echarts.init(
@@ -54,10 +58,10 @@ function showSalariesHistory(name, salariesMap)
             },
             axisLabel: {
                 color: '#8b949e',
-                fontSize: 12,     // 缩小字号
+                fontSize: 10,     // 缩小字号
                 top: '12%'
             },
-            data: Array.from(durationSet)
+            data: Array.from(salariesMap.keys())
         },
         yAxis: {
             type: 'value',
@@ -100,7 +104,7 @@ function showSalariesHistory(name, salariesMap)
                     color: '#1f6feb00'
                 }])
             },
-            data: Array.from(salarySet)
+            data: Array.from(salariesMap.values())
         }]
     };
 
@@ -115,7 +119,7 @@ function showSalariesHistory(name, salariesMap)
 
 
 const clearElement = (id) => {
-        document.getElementById(id).innerHTML = '';
+    document.getElementById(id).innerHTML = '';
 };
 
 /*
@@ -150,13 +154,11 @@ function setInfoToPage(queryJson)
     clearElement('department_timeline');
     clearElement('salary_history_data');
 
-
     document.getElementById('employee_id').innerText
         = `${queryJson.employeeId}`;
 
     document.getElementById('employee_name').innerHTML
         = `<strong>${queryJson.lastName}-${queryJson.firstName}<strong>`;
-
 
     document.getElementById('employee_gender').innerText
         = (queryJson.gender === 'M') ? '♂️ Male' : '♀️ Female';
@@ -191,21 +193,32 @@ function setInfoToPage(queryJson)
 
     for (var index = 0; index < fromDateList.length; ++index) 
     {
+        let insertHTML;
+
+        if (toDateList[index] != '9999-01-01')
+        {
+               
+            insertHTML = 
+                `<tr>
+                    <td>${departmentsList[index]}</td>
+                    <td><time>${fromDateList[index]}</time></td>
+                    <td><time>${toDateList[index]}</time></td>
+                </tr>`;
+        }
+        else 
+        {
+            insertHTML = 
+                `<tr>
+                    <td>${departmentsList[index]}</td>
+                    <td><time>${fromDateList[index]}</time></td>
+                    <td>
+                    <time style="color: #238636">Present<time>
+                    </td>
+                </tr>`;
+        }
 
         departmentTimelineElement.insertAdjacentHTML(
-            'beforeend',
-            `
-					<tr>
-						<td>${departmentsList[index]}</td>
-						<td>
-                            <time>${fromDateList[index]}</time>
-                        </td>
-						<td>
-                            <time>
-                                ${(toDateList[index] === '9999-01-01') ? 'Present' : toDateList[index]}
-                            </time>
-                        </td>
-					</tr>`
+            'beforeend', insertHTML
         );
     }
 
@@ -224,10 +237,12 @@ function setInfoToPage(queryJson)
     showSalariesHistory(`${queryJson.lastName}-${queryJson.firstName}`, salariesMap);
 }
 
-async function queryEmployee() 
+function queryEmployee()
 {
-    let input
-            = document.getElementById('emp_no_input').value;
+    const employeeQueryInputElement 
+            = document.getElementById('emp_query_input');
+
+    let input = employeeQueryInputElement.value.trim();
 
     // 如果用户啥也没输入
     if (!input) 
@@ -239,94 +254,123 @@ async function queryEmployee()
     try 
     {
         // 倘若用户输入的纯数字字符串，则认为他输入的是员工 ID
-        if (/^\d+$/.test(input))
-        {
-            let employeeNo = input;
-
-            const response = await fetch(`/api/employee/info/search_by_id/${employeeNo}`);
-
-            if (!response.ok) 
-            {
-                const errorMessage
-                    = `Query failed! Status:${response.status}, Error: ${await response.text()}.`;
-
-                console.error(errorMessage);
-                alert(errorMessage);
-
-                throw new Error(errorMessage);
-            }
-
-            const queryJson = await response.json();
-
-            console.log(queryJson);
-
-            const employeeInfoLinks
-                    = document.getElementById('employee_info_links');
-
-            employeeInfoLinks.style.display = 'none';
-
-            // 显示并触发动画
-            const infoContainer             = document.getElementById('employee_info');
-            infoContainer.style.display     = 'block';
-            infoContainer.style.animation   = 'none';
-            void infoContainer.offsetWidth; // 触发重绘
-            infoContainer.style.animation   = 'fadeIn 0.4s ease-out forwards';
-
-            setInfoToPage(queryJson);
+        if (/^\d+$/.test(input)) {
+            queryEmployeeUseNo(input);
         }
-        // 如果用户输入的是 last_name-first_name 这样的格式
-        else if (/^[A-Z][a-zA-Z]*-[a-zA-Z]+$/.test(input))
+        // 如果用户输入的是 last_name-first_name 这样的格式，则认为他输入的是员工姓名
+        else if (/^[A-Z][a-zA-Z]*-[a-zA-Z]+$/.test(input)) {
+            queryEmployeeUseName(input);
+        }
+        // 若两者皆不匹配，就提示用户重新输入
+        else 
         {
-            let employeeName = input;
-            
-            const response 
-                = await fetch(`/api/employee/info/search_by_name/${employeeName}`);
-
-            if (!response.ok) 
-            {
-                const errorMessage
-                    = `Query failed! Status:${response.status}, Error: ${await response.text()}.`;
-
-                console.error(errorMessage);
-                alert(errorMessage);
-
-                throw new Error(errorMessage);
-            }
-
-            const queryIds = await response.json();
-
-            console.log(queryIds);
-
-            const infoContainer = document.getElementById('employee_info');
-
-            if (infoContainer != null) 
-            {
-                infoContainer.style.display   = 'none';
-                infoContainer.style.animation = 'none';
-            }
-
-            const employeeInfoLinks
-                    = document.getElementById('employee_info_links');
-            
-            employeeInfoLinks.style.display = 'block';
-            
-            clearElement('employee_info_links');
-            
-            for (var empId of queryIds) 
-            {
-                employeeInfoLinks.insertAdjacentHTML(
-                'beforeend',
-                `<li>
-					<a href="/employee/query/${empId}">
-						Profile of employee: 
-						[${empId}] ${employeeName}
-					</a>
-				</li>`
-            );
-            }
+            alert(`Invalid input! ${input} isn't an employee-No. or Name!`);
+            employeeQueryInputElement.value = '';
+            return;
         }
     }
-    catch (error) {
+    catch (error) 
+    {
         console.error(error);
+        alert(error.message);
     }
+}
+
+/**
+ * 使用员工号查询。
+*/
+async function queryEmployeeUseNo(employeeNo)
+{
+    const response = await fetch(`/api/employee/info/search_by_id/${employeeNo}`);
+
+    if (!response.ok) 
+    {
+        const errorMessage
+            = `Query failed! Status:${response.status}, Error: ${await response.text()}.`;
+
+        console.error(errorMessage);
+        alert(errorMessage);
+
+        throw new Error(errorMessage);
+     }
+
+    const queryJson = await response.json();
+
+    console.log(queryJson);
+
+    const employeeInfoLinks
+        = document.getElementById('employee_info_links');
+
+    employeeInfoLinks.style.display = 'none';
+
+    // 显示并触发动画
+    const infoContainer             = document.getElementById('employee_info');
+    infoContainer.style.display     = 'block';
+    infoContainer.style.animation   = 'none';
+    requestAnimationFrame(
+        () => {
+            infoContainer.style.animation = 'fadeIn 0.4s ease-out forwards';
+        }
+    );
+    
+    // 早期触发浏览器重绘的经典操作，现在可以被 requestAnimationFrame(callback) 替代
+    // void infoContainer.offsetWidth; // 触发重绘
+    // infoContainer.style.animation = 'fadeIn 0.4s ease-out forwards';
+
+    setInfoToPage(queryJson);
+}
+
+/**
+ * 使用员工姓名查询。
+*/
+async function queryEmployeeUseName(employeeName) 
+{
+    const response 
+            = await fetch(`/api/employee/info/search_by_name/${employeeName}`);
+
+    if (!response.ok) 
+    {
+        const errorMessage
+                = `Query failed! Status:${response.status}, Error: ${await response.text()}.`;
+
+        console.error(errorMessage);
+        alert(errorMessage);
+
+        throw new Error(errorMessage);
+    }
+
+    const queryIds = await response.json();
+
+    console.log(queryIds);
+
+    const infoContainer = document.getElementById('employee_info');
+
+    if (infoContainer != null) 
+    {
+        infoContainer.style.display   = 'none';
+        infoContainer.style.animation = 'none';
+    }
+
+    const employeeInfoLinks
+            = document.getElementById('employee_info_links');
+            
+    employeeInfoLinks.style.display = 'block';
+            
+    clearElement('employee_info_links');
+            
+    for (var empId of queryIds)
+    {
+        employeeInfoLinks.insertAdjacentHTML(
+            'beforeend',
+            `<li>
+				<a href="/employee/query/${empId}">
+					Profile of employee: 
+					[${empId}] ${employeeName}
+				</a>
+			</li>`
+        );
+    }
+
+    document.getElementById('query_count').innerText
+            = `Total ${queryIds.length} query result.`;
 }
