@@ -61,7 +61,7 @@ h1 {
 }
 
 /* 优化输入框和按钮 */
-#emp_no_input {
+#emp_query_input {
   background-color: #010409;
   border: 1px solid var(--gh-border);
   color: var(--gh-text);
@@ -72,13 +72,13 @@ h1 {
   transition: border-color 0.2s;
 }
 
-#emp_no_input:focus {
+#emp_query_input:focus {
   outline: none;
   border-color: var(--gh-accent);
   box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
 }
 
-#emp_no_button {
+#emp_query_button {
   background-color: var(--gh-btn-bg);
   color: #ffffff;
   border: 1px solid rgba(240, 246, 252, 0.1);
@@ -90,7 +90,7 @@ h1 {
   transition: all 0.2s;
 }
 
-#emp_no_button:hover {
+#emp_query_button:hover {
   background-color: var(--gh-btn-hover);
   border-color: #3fb950;
   transform: translateY(-1px);
@@ -122,6 +122,19 @@ h1 {
   padding: 24px;
   margin-bottom: 20px;
   box-shadow: 0 1px 0 rgba(16, 22, 26, 0.15);
+}
+
+#btn_display_hidden {
+  background-color: var(--gh-btn-bg);
+  color: #ffffff;
+  border: 1px solid rgba(240, 246, 252, 0.1);
+  margin: 0 0 15px 0;
+  padding: 5px 5px 5px 5px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 #salary_charts {
@@ -180,6 +193,7 @@ table {
   border-spacing: 0;
   background-color: var(--gh-bg);
   overflow: hidden; /* 保证圆角效果 */
+  margin: 0 0 25px 0;
 }
 
 th,
