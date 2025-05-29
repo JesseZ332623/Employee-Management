@@ -8,14 +8,15 @@
 		<link rel="stylesheet" th:href="@{/css/Employee_Query_Style.css}" />
 		<script th:src="@{/js/echarts.js}"></script>
 		<script th:src="@{/js/Employee_Query_Script.js}"></script>
+		<script th:src="@{/js/TableView_Operator_Script.js}"></script>
 	</head>
 	<body>
 		<h1>Employee Profile</h1>
 
 		<div id="data_input">
 			<p id="prompt">Enter Employee ID or Name: </p>
-			<input id="emp_no_input" type="text" placeholder="ID or Name">
-			<button id="emp_no_button" type="submit" onclick="queryEmployee()">
+			<input id="emp_query_input" type="text" placeholder="ID or Name">
+			<button id="emp_query_button" type="submit" onclick="queryEmployee()">
 				Query
 			</button>
 		</div>
@@ -24,6 +25,9 @@
 			<ol id="employee_info_links">
 				<!-- <li><a></a></li> -->
 			</ol>
+			<strong id="query_count">
+				<!-- Total 114514 query result. -->
+			</strong>
 		</div>
 
 		<div id="employee_info">
@@ -59,9 +63,7 @@
 									<th>To Date</th>
 								</tr>
 							</thead>
-							<tbody id="department_timeline">
-								
-							</tbody>
+							<tbody id="department_timeline"></tbody>
 						</table>
 					</article>
 				</section>
@@ -71,7 +73,11 @@
 			<div id="salary_history">
 				<section>
 					<h2>Salary History</h2>
-					<table style="display: none;">
+					<button type="button" id="btn_display_hidden"
+					        onclick="displayOrHidden(this, 'salary_history_table')">
+						Hidden Table
+					</button>
+					<table id="salary_history_table">
 						<thead>
 							<tr>
 								<th>Duration</th>
@@ -82,8 +88,8 @@
 
 						</tbody>
 					</table>
-					<div id="salary_charts" style="width:100%; height:500px; margin: 0 auto;">
-
+					<div id="salary_charts"
+					     style="width:100%; height:500px; margin: 0 auto;">
 					</div>
 				</section>
 			</div>
