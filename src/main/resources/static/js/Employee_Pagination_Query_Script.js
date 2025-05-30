@@ -29,7 +29,7 @@ async function doEmployeePaginationQuery()
     {
         // 1. 发起 API 请求
         const response = await fetch(
-            `/api/employee/range_info/${ONE_PAGINATION_COUNT}_${CURRENT_OFFSET}`
+            `/api/employee/info/range_info/${ONE_PAGINATION_COUNT}_${CURRENT_OFFSET}`
         );
 
         // 2. 错误处理
