@@ -91,7 +91,7 @@ public class EmployeeController
         }
     }
 
-    @GetMapping(path = "/range_info/{limit}_{offset}")
+    @GetMapping(path = "/info/range_info/{limit}_{offset}")
     public ResponseEntity<?>
     getAllEmployeeIDNameByRange(
             @PathVariable Integer limit,
